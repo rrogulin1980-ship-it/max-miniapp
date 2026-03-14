@@ -22,7 +22,7 @@ if (MAX.BackButton) {
     });
 }
 
-// Данные о услугах ООО Геолог
+// Данные о услугах РОСТДИАГНОСТИКА
 const SERVICES = {
     tech: {
         emoji: '🏗️',
@@ -129,11 +129,11 @@ function scrollToBottom() {
 function addMessage(text, sender = 'bot', buttons = null) {
     const msg = document.createElement('div');
     msg.className = `message ${sender}`;
-    
+
     const bubble = document.createElement('div');
     bubble.className = 'message-bubble';
     bubble.textContent = text;
-    msg.appendChild(bubble);
+    if (text) msg.appendChild(bubble);
 
     if (buttons) {
         const btnGroup = document.createElement('div');
@@ -142,7 +142,13 @@ function addMessage(text, sender = 'bot', buttons = null) {
             const button = document.createElement('button');
             button.className = btn.type === 'back' ? 'btn-back' : 'btn-choice';
             button.textContent = btn.label;
-            button.onclick = btn.action;
+            button.onclick = () => {
+                // При выборе услуги из главного меню — скрыть все остальные кнопки
+                if (state.step === 'start' && btn.type === 'choice') {
+                    btnGroup.style.display = 'none';
+                }
+                btn.action();
+            };
             btnGroup.appendChild(button);
         });
         msg.appendChild(btnGroup);
@@ -193,28 +199,22 @@ function showServiceButtons() {
 // Выбор услуги
 function selectService(key) {
     state.service = key;
+    state.step = 'service_selected';
     const service = SERVICES[key];
-    
-    let text = `${service.emoji} ${service.name}
 
-${service.description}
+    let text = `${service.emoji} ${service.name}\n\n${service.description}\n\nЦены:`;
 
-Цены:`;
-    
     // Виброотклик
     if (MAX.HapticFeedback) {
         MAX.HapticFeedback.impactOccurred('light');
     }
 
     service.items.forEach(item => {
-        text += `
-• ${item.name} — ${item.price}`;
+        text += `\n• ${item.name} — ${item.price}`;
     });
 
-    text += `
+    text += `\n\n${service.note}`;
 
-${service.note}`;
-    
     addMessage(text, 'bot', [
         { label: '✅ Оформить заявку', action: requestName, type: 'choice' },
         { label: '📞 Позвонить', action: callPhone, type: 'choice' },
@@ -224,7 +224,7 @@ ${service.note}`;
 
 // Звонок
 function callPhone() {
-    window.location.href = 'tel:+78632000000';
+    window.location.href = 'tel:+79188988887';
 }
 
 // Возврат к услугам
@@ -251,7 +251,7 @@ function requestName() {
     addMessage('Введите ваше имя:', 'bot');
     inputArea.style.display = 'flex';
     userInput.focus();
-    
+
     // Показать кнопку «Назад» в MAX
     if (MAX.BackButton) {
         MAX.BackButton.show();
@@ -274,7 +274,7 @@ function requestAddress() {
 function sendText() {
     const text = userInput.value.trim();
     if (!text) return;
-    
+
     addMessage(text, 'user');
     userInput.value = '';
 
@@ -294,21 +294,14 @@ function sendText() {
 function finishRequest() {
     inputArea.style.display = 'none';
     const service = SERVICES[state.service];
-    
-    const summary = `Отлично, ${state.name}!
 
-Ваша заявка принята:
-• Услуга: ${service.name}
-• Телефон: ${state.phone}
-• Адрес: ${state.address}
+    const summary = `Отлично, ${state.name}!\n\nВаша заявка принята:\n• Услуга: ${service.name}\n• Телефон: ${state.phone}\n• Адрес: ${state.address}\n\nМы свяжемся с вами в ближайшее время для уточнения деталей и согласования выезда специалиста.`;
 
-Мы свяжемся с вами в ближайшее время для уточнения деталей и согласования выезда специалиста.`;
-    
     showTyping();
     // Эмуляция отправки на сервер
     setTimeout(() => {
         hideTyping();
-        
+
         // Успешный виброотклик
         if (MAX.HapticFeedback) {
             MAX.HapticFeedback.notificationOccurred('success');
