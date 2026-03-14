@@ -1,3 +1,4 @@
+// Данные о услугах ООО Геолог
 const SERVICES = {
   tech: {
     emoji: '🏗️',
@@ -80,6 +81,7 @@ const SERVICES = {
   }
 };
 
+// Состояние диалога
 let state = {
   step: 'start',
   service: null,
@@ -92,12 +94,14 @@ const messages = document.getElementById('chatMessages');
 const inputArea = document.getElementById('inputArea');
 const userInput = document.getElementById('userInput');
 
+// Автопрокрутка вниз
 function scrollToBottom() {
   setTimeout(() => {
     messages.scrollTop = messages.scrollHeight;
   }, 100);
 }
 
+// Добавление сообщения
 function addMessage(text, sender = 'bot', buttons = null) {
   const msg = document.createElement('div');
   msg.className = `message ${sender}`;
@@ -110,7 +114,6 @@ function addMessage(text, sender = 'bot', buttons = null) {
   if (buttons) {
     const btnGroup = document.createElement('div');
     btnGroup.className = 'buttons-group';
-    
     buttons.forEach(btn => {
       const button = document.createElement('button');
       button.className = btn.type === 'back' ? 'btn-back' : 'btn-choice';
@@ -118,7 +121,6 @@ function addMessage(text, sender = 'bot', buttons = null) {
       button.onclick = btn.action;
       btnGroup.appendChild(button);
     });
-    
     msg.appendChild(btnGroup);
   }
   
@@ -126,16 +128,15 @@ function addMessage(text, sender = 'bot', buttons = null) {
   scrollToBottom();
 }
 
+// Индикатор набора
 function showTyping() {
   const msg = document.createElement('div');
   msg.className = 'message bot';
   msg.id = 'typing';
-  
   const indicator = document.createElement('div');
   indicator.className = 'typing-indicator';
   indicator.innerHTML = '<span></span><span></span><span></span>';
   msg.appendChild(indicator);
-  
   messages.appendChild(msg);
   scrollToBottom();
 }
@@ -145,25 +146,27 @@ function hideTyping() {
   if (typing) typing.remove();
 }
 
+// Старт диалога
 function startChat() {
   showTyping();
   setTimeout(() => {
     hideTyping();
-    addMessage('Здравствуйте! Выберите интересующую вас услугу:');
+    addMessage('Здравствуйте! Я помогу подобрать услугу для вашего объекта. Выберите интересующее направление:');
     showServiceButtons();
-  }, 800);
+  }, 600);
 }
 
+// Кнопки выбора услуг
 function showServiceButtons() {
   const btns = Object.keys(SERVICES).map(key => ({
     label: `${SERVICES[key].emoji} ${SERVICES[key].name}`,
     action: () => selectService(key),
     type: 'choice'
   }));
-  
   addMessage('', 'bot', btns);
 }
 
+// Выбор услуги
 function selectService(key) {
   state.service = key;
   const service = SERVICES[key];
@@ -176,16 +179,24 @@ function selectService(key) {
   
   addMessage(text, 'bot', [
     { label: '✅ Оформить заявку', action: requestName, type: 'choice' },
+    { label: '📞 Позвонить', action: callPhone, type: 'choice' },
     { label: '↩️ Назад к услугам', action: backToServices, type: 'back' }
   ]);
 }
 
+// Звонок
+function callPhone() {
+  window.location.href = 'tel:+78632000000';
+}
+
+// Возврат к услугам
 function backToServices() {
   state = { step: 'start', service: null, name: '', phone: '', address: '' };
   addMessage('Выберите услугу:', 'bot');
   showServiceButtons();
 }
 
+// Запрос имени
 function requestName() {
   state.step = 'name';
   addMessage('Введите ваше имя:', 'bot');
@@ -193,16 +204,19 @@ function requestName() {
   userInput.focus();
 }
 
+// Запрос телефона
 function requestPhone() {
   state.step = 'phone';
-  addMessage('Введите ваш телефон:', 'bot');
+  addMessage('Введите ваш телефон (например, +7 XXX XXX-XX-XX):', 'bot');
 }
 
+// Запрос адреса
 function requestAddress() {
   state.step = 'address';
   addMessage('Введите адрес объекта:', 'bot');
 }
 
+// Отправка текста
 function sendText() {
   const text = userInput.value.trim();
   if (!text) return;
@@ -222,13 +236,16 @@ function sendText() {
   }
 }
 
+// Завершение заявки
 function finishRequest() {
   inputArea.style.display = 'none';
-  
   const service = SERVICES[state.service];
-  const summary = `Спасибо, ${state.name}!\n\nВаша заявка принята:\n• Услуга: ${service.name}\n• Телефон: ${state.phone}\n• Адрес: ${state.address}\n\nМы свяжемся с вами в ближайшее время для уточнения деталей.`;
+  
+  const summary = `Отлично, ${state.name}!\n\nВаша заявка принята:\n• Услуга: ${service.name}\n• Телефон: ${state.phone}\n• Адрес: ${state.address}\n\nМы свяжемся с вами в ближайшее время для уточнения деталей и согласования выезда специалиста.`;
   
   showTyping();
+  
+  // Эмуляция отправки на сервер
   setTimeout(() => {
     hideTyping();
     const msg = document.createElement('div');
@@ -240,17 +257,21 @@ function finishRequest() {
     messages.appendChild(msg);
     scrollToBottom();
     
+    // Предложение новой услуги
     setTimeout(() => {
-      addMessage('Хотите выбрать другую услугу?', 'bot', [
-        { label: '✅ Да', action: backToServices, type: 'choice' },
-        { label: '❌ Нет, спасибо', action: () => addMessage('Благодарим за обращение!', 'bot'), type: 'back' }
+      addMessage('Хотите узнать о других наших услугах?', 'bot', [
+        { label: '✅ Да, показать услуги', action: backToServices, type: 'choice' },
+        { label: '📞 Позвонить напрямую', action: callPhone, type: 'choice' },
+        { label: '❌ Нет, спасибо', action: () => addMessage('Благодарим за обращение! До связи! 👋', 'bot'), type: 'back' }
       ]);
-    }, 1500);
-  }, 1000);
+    }, 1200);
+  }, 900);
 }
 
+// Обработка Enter
 userInput.addEventListener('keypress', (e) => {
   if (e.key === 'Enter') sendText();
 });
 
+// Запуск при загрузке
 startChat();
