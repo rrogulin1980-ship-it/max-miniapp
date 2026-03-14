@@ -1,1 +1,28 @@
-
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Строительная экспертиза</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="chat-wrapper">
+        <div class="chat-header">
+            <div class="header-logo">🏗️</div>
+            <div class="header-info">
+                <div class="header-title">Строительная экспертиза</div>
+                <div class="header-subtitle">Онлайн-консультант • РОСТДИАГНОСТИКА</div>
+            </div>
+            <a class="header-phone" href="tel:+79188988887" title="Позвонить">📞</a>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area" id="inputArea" style="display:none">
+            <input type="text" id="userInput" placeholder="Введите сообщение..." autocomplete="off">
+            <button id="sendBtn" onclick="sendText()">➤</button>
+        </div>
+    </div>
+    <script src="https://st.max.ru/js/max-web-app.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
