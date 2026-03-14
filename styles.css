@@ -1,0 +1,103 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+body {
+  background: #f4f6fb;
+  padding: 16px;
+}
+
+.app {
+  max-width: 480px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+}
+
+h1 {
+  font-size: 20px;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  color: #555;
+  margin-bottom: 12px;
+}
+
+.services {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.service-btn {
+  border: none;
+  border-radius: 12px;
+  padding: 10px;
+  background: #f0f3ff;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.service-btn:hover {
+  background: #e0e6ff;
+  transform: translateY(-1px);
+}
+
+.service-btn.active {
+  background: #335dff;
+  color: #ffffff;
+}
+
+.form label {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+textarea,
+input[type="tel"] {
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #ccd2e0;
+  font-size: 14px;
+  resize: vertical;
+}
+
+textarea {
+  min-height: 80px;
+}
+
+.send-btn {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  border: none;
+  border-radius: 999px;
+  background: #335dff;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+
+.send-btn:hover {
+  background: #2647c7;
+  transform: translateY(-1px);
+}
+
+.status {
+  margin-top: 8px;
+  font-size: 13px;
+}
