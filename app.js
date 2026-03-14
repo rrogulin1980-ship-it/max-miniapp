@@ -1,3 +1,27 @@
+// MAX Bridge интеграция
+const MAX = window.WebApp || {};
+let maxUser = null;
+
+// Инициализация MAX
+if (MAX.initDataUnsafe && MAX.initDataUnsafe.user) {
+  maxUser = MAX.initDataUnsafe.user;
+  console.log('MAX user:', maxUser);
+}
+
+// Сообщить MAX о готовности
+if (MAX.ready) {
+  MAX.ready();
+}
+
+// Настройка кнопки «Назад»
+if (MAX.BackButton) {
+  MAX.BackButton.onClick(() => {
+    if (state.step !== 'start') {
+      backToServices();
+    }
+  });
+}
+
 // Данные о услугах ООО Геолог
 const SERVICES = {
   tech: {
@@ -172,10 +196,13 @@ function selectService(key) {
   const service = SERVICES[key];
   
   let text = `${service.emoji} ${service.name}\n\n${service.description}\n\nЦены:`;
+    // Виброотклик
+  if (MAX.HapticFeedback) {
+    MAX.HapticFeedback.impactOccurred('light');
+  }
   service.items.forEach(item => {
     text += `\n• ${item.name} — ${item.price}`;
-  });
-  text += `\n\n${service.note}`;
+requestName  text += `\n\n${service.note}`;
   
   addMessage(text, 'bot', [
     { label: '✅ Оформить заявку', action: requestName, type: 'choice' },
@@ -195,6 +222,10 @@ function backToServices() {
   addMessage('Выберите услугу:', 'bot');
   showServiceButtons();
 }
+    // Скрыть кнопку «Назад»
+  if (MAX.BackButton) {
+    MAX.BackButton.hide();
+  }
 
 // Запрос имени
 function requestName() {
@@ -202,6 +233,10 @@ function requestName() {
   addMessage('Введите ваше имя:', 'bot');
   inputArea.style.display = 'flex';
   userInput.focus();
+    // Показать кнопку «Назад» в MAX
+  if (MAX.BackButton) {
+    MAX.BackButton.show();
+  }
 }
 
 // Запрос телефона
@@ -248,6 +283,10 @@ function finishRequest() {
   // Эмуляция отправки на сервер
   setTimeout(() => {
     hideTyping();
+        // Успешный виброотклик
+    if (MAX.HapticFeedback) {
+      MAX.HapticFeedback.notificationOccurred('success');
+    }
     const msg = document.createElement('div');
     msg.className = 'message bot';
     const banner = document.createElement('div');
