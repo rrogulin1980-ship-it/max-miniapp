@@ -1,60 +1,26 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Строительная экспертиза</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- Подключаем стили -->
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="app">
-    <h1>Строительная экспертиза</h1>
-
-    <p class="subtitle">Выберите услугу:</p>
-
-    <div class="services">
-      <button class="service-btn" data-service="tech_inspection">
-        🏗 Техническое обследование
-      </button>
-      <button class="service-btn" data-service="room_status">
-        🏠 Признание помещения жилым/нежилым
-      </button>
-      <button class="service-btn" data-service="house_emergency">
-        ⚠️ Признание дома аварийным
-      </button>
-      <button class="service-btn" data-service="court_expert">
-        ⚖️ Судебная строительно‑техническая экспертиза
-      </button>
-      <button class="service-btn" data-service="design">
-        📐 Проектирование зданий
-      </button>
-      <button class="service-btn" data-service="build_lab">
-        🔬 Строительная лаборатория
-      </button>
-      <button class="service-btn" data-service="test_lab">
-        🧪 Испытательная лаборатория
-      </button>
+  <div class="chat-wrapper">
+    <div class="chat-header">
+      <div class="header-logo">🏗️</div>
+      <div class="header-info">
+        <div class="header-title">Строительная экспертиза</div>
+        <div class="header-subtitle">Онлайн-консультант</div>
+      </div>
     </div>
-
-    <div class="form">
-      <label>
-        Опишите задачу:
-        <textarea id="problem" placeholder="Например: трещины в стенах, панельный дом, Ростов-на-Дону..."></textarea>
-      </label>
-
-      <label>
-        Контактный телефон:
-        <input id="contact" type="tel" placeholder="+7" />
-      </label>
-
-      <button id="sendBtn" class="send-btn">Отправить заявку</button>
-      <p id="status" class="status"></p>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input-area" id="inputArea" style="display:none">
+      <input type="text" id="userInput" placeholder="Введите сообщение...">
+      <button id="sendBtn" onclick="sendText()">➤</button>
     </div>
   </div>
-
-  <!-- Подключаем JS в конце body -->
   <script src="app.js"></script>
 </body>
 </html>
